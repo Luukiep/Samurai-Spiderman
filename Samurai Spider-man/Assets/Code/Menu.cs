@@ -5,9 +5,20 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public Animator characterAnimator;
+    public float rotationSpeed = 30f;
+    public Transform spiderman;
+
     private bool isWalking = false;
     private bool isRunning = false;
 
+    public void Update()
+    {
+        spiderman= GetComponent<Transform>();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        { 
+          OnDestroy();
+        }
+    }
     public void OnWalkButtonClick()
     {
         // Toggle walking animation
@@ -44,5 +55,21 @@ public class Menu : MonoBehaviour
             // Stop running animation
             characterAnimator.SetBool("isRunning", false);
         }
+    }
+
+    public void RotateLeft()
+    {
+        // Rotate the GameObject left
+        spiderman.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+    }
+
+    public void RotateRight()
+    {
+        // Rotate the GameObject right
+        spiderman.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+    }
+    public void OnDestroy()
+    {
+        Application.Quit();
     }
 }
