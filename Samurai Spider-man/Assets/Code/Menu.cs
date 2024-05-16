@@ -5,18 +5,34 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public Animator characterAnimator;
-    public float rotationSpeed = 30f;
-    public Transform spiderman;
+    public GameObject targetObject; // The target GameObject to rotate
+    public float rotationSpeed = 2.0f; // Adjust this value for faster or slower rotation
+
+    private bool isRotatingLeft = false;
+    private bool isRotatingRight = false;
+
 
     private bool isWalking = false;
     private bool isRunning = false;
 
+
     public void Update()
     {
-        spiderman= GetComponent<Transform>();
+        if (targetObject != null)
+        {
+            if (isRotatingLeft)
+            {
+                targetObject.transform.Rotate(0, -rotationSpeed * Time.deltaTime * 90, 0);
+            }
+            else if (isRotatingRight)
+            {
+                targetObject.transform.Rotate(0, rotationSpeed * Time.deltaTime * 90, 0);
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
-        { 
-          OnDestroy();
+        {
+            Quit();
         }
     }
     public void OnWalkButtonClick()
@@ -57,18 +73,32 @@ public class Menu : MonoBehaviour
         }
     }
 
-    public void RotateLeft()
+    public void ToggleRotateLeft()
     {
-        // Rotate the GameObject left
-        spiderman.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
+        if (isRotatingLeft)
+        {
+            isRotatingLeft = false; // Stop rotating left
+        }
+        else
+        {
+            isRotatingLeft = true; // Start rotating left
+            isRotatingRight = false; // Stop rotating right if it was active
+        }
     }
 
-    public void RotateRight()
+    public void ToggleRotateRight()
     {
-        // Rotate the GameObject right
-        spiderman.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        if (isRotatingRight)
+        {
+            isRotatingRight = false; // Stop rotating right
+        }
+        else
+        {
+            isRotatingRight = true; // Start rotating right
+            isRotatingLeft = false; // Stop rotating left if it was active
+        }
     }
-    public void OnDestroy()
+    public void Quit()
     {
         Application.Quit();
     }
