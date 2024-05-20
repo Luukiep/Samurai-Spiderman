@@ -8,8 +8,8 @@ public class Menu : MonoBehaviour
     public GameObject targetObject; // The target GameObject to rotate
     public float rotationSpeed = 2.0f; // Adjust this value for faster or slower rotation
 
-    private bool isRotatingLeft = false;
-    private bool isRotatingRight = false;
+    private bool rotateLeft = false;
+    private bool rotateRight = false;
 
 
     private bool isWalking = false;
@@ -20,11 +20,11 @@ public class Menu : MonoBehaviour
     {
         if (targetObject != null)
         {
-            if (isRotatingLeft)
+            if (rotateLeft)
             {
                 targetObject.transform.Rotate(0, -rotationSpeed * Time.deltaTime * 90, 0);
             }
-            else if (isRotatingRight)
+            else if (rotateRight)
             {
                 targetObject.transform.Rotate(0, rotationSpeed * Time.deltaTime * 90, 0);
             }
@@ -73,30 +73,26 @@ public class Menu : MonoBehaviour
         }
     }
 
-    public void ToggleRotateLeft()
+   public void OnLeftButtonPress()
     {
-        if (isRotatingLeft)
-        {
-            isRotatingLeft = false; // Stop rotating left
-        }
-        else
-        {
-            isRotatingLeft = true; // Start rotating left
-            isRotatingRight = false; // Stop rotating right if it was active
-        }
+        rotateLeft = true;
+        rotateRight = false;
     }
 
-    public void ToggleRotateRight()
+    public void OnLeftButtonRelease()
     {
-        if (isRotatingRight)
-        {
-            isRotatingRight = false; // Stop rotating right
-        }
-        else
-        {
-            isRotatingRight = true; // Start rotating right
-            isRotatingLeft = false; // Stop rotating left if it was active
-        }
+        rotateLeft = false;
+    }
+
+    public void OnRightButtonPress()
+    {
+        rotateRight = true;
+        rotateLeft = false;
+    }
+
+    public void OnRightButtonRelease()
+    {
+        rotateRight = false;
     }
     public void Quit()
     {
