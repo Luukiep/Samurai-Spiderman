@@ -5,48 +5,30 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Cama : MonoBehaviour
 {
-    public float scrollSpeed = 10f;
-    public Transform target;
-    public float minDistance = 5f;
-    public float maxDistance = 20f;
+    public Transform pointA; // The first point
+    public Transform pointB; // The second point
+    public float scrollSpeed = 1.0f; // Speed at which the camera moves
+    public float minDistanceFromPointB = 1.0f; // Minimum distance to maintain from point B
 
-    private float currentDistance;
+    private float scrollInput = 0.0f; // Value to store the scroll input
+    private float maxScrollInput; // Maximum scroll input based on minDistanceFromPointB
 
     void Start()
     {
-        if (target != null)
-        {
-            // Calculate initial distance from the target
-            currentDistance = Vector3.Distance(transform.position, target.position);
-        }
-        else
-        {
-            Debug.LogError("Target not set for CameraMover script.");
-        }
+        // Calculate the maximum scroll input based on the minimum distance
+        float totalDistance = Vector3.Distance(pointA.position, pointB.position);
+        maxScrollInput = 1.0f - (minDistanceFromPointB / totalDistance);
     }
 
     void Update()
     {
-        if (target == null) return;
+        // Get the scroll wheel input
+        scrollInput += Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
 
-        // Get the input from the scroll wheel
-        float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
+        // Clamp the input value to be between 0 and maxScrollInput
+        scrollInput = Mathf.Clamp(scrollInput, 0.0f, maxScrollInput);
 
-        // Update the current distance based on the scroll input
-        currentDistance = Mathf.Clamp(currentDistance - scroll, minDistance, maxDistance);
-
-        // Calculate the new position
-        Vector3 direction = (transform.position - target.position).normalized;
-        Vector3 newPosition = target.position + direction * currentDistance;
-
-        // Ensure the camera does not get too close to the target
-        if (currentDistance > minDistance)
-        {
-            // Set the camera's position to the new position
-            transform.position = newPosition;
-        }
-
-        // Keep the camera facing the target
-        transform.LookAt(target);
+        // Interpolate the camera's position between point A and point B
+        transform.position = Vector3.Lerp(pointA.position, pointB.position, scrollInput);
     }
 }
