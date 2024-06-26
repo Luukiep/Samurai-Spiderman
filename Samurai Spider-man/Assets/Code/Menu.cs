@@ -14,6 +14,8 @@ public class Menu : MonoBehaviour
 
     private bool isWalking = false;
     private bool isRunning = false;
+    private bool isBack = false;
+    private bool isSmash = false;
 
 
     public void Update()
@@ -41,11 +43,12 @@ public class Menu : MonoBehaviour
         isWalking = !isWalking;
         if (isWalking)
         {
+            characterAnimator.SetBool("isBack", false);
             // Start walking animation
             characterAnimator.SetBool("isWalking", true);
             // Ensure running animation is stopped
             characterAnimator.SetBool("isRunning", false);
-            isRunning = false;
+            characterAnimator.SetBool("isSmashed", false);
         }
         else
         {
@@ -60,11 +63,12 @@ public class Menu : MonoBehaviour
         isRunning = !isRunning;
         if (isRunning)
         {
+            characterAnimator.SetBool("isBack", false);
             // Start running animation
             characterAnimator.SetBool("isRunning", true);
             // Ensure walking animation is stopped
             characterAnimator.SetBool("isWalking", false);
-            isWalking = false;
+            characterAnimator.SetBool("isSmash", false);
         }
         else
         {
@@ -72,8 +76,46 @@ public class Menu : MonoBehaviour
             characterAnimator.SetBool("isRunning", false);
         }
     }
+    public void OnBackflipButtonClick()
+    {
+        // Toggle running animation
+        isBack = !isBack;
+        if (isBack)
+        {
+            characterAnimator.SetBool("isBack", true);
+            // Start running animation
+            characterAnimator.SetBool("isRunning", false);
+            // Ensure walking animation is stopped
+            characterAnimator.SetBool("isWalking", false);
+            characterAnimator.SetBool("isSmash", false);
+        }
+        else
+        {
+            // Stop running animation
+            characterAnimator.SetBool("isBack", false);
+        }
+    }
+    public void OnCrushButtonClick()
+    {
+        // Toggle running animation
+        isSmash = !isSmash;
+        if (isSmash)
+        {
+            characterAnimator.SetBool("isBack", false);
+            // Start running animation
+            characterAnimator.SetBool("isRunning", false);
+            // Ensure walking animation is stopped
+            characterAnimator.SetBool("isWalking", false);
+            characterAnimator.SetBool("isSmash", true);
+        }
+        else
+        {
+            // Stop running animation
+            characterAnimator.SetBool("isSmash", false);
+        }
+    }
 
-   public void OnLeftButtonPress()
+    public void OnLeftButtonPress()
     {
         rotateLeft = true;
         rotateRight = false;
